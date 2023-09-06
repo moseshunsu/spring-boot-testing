@@ -19,8 +19,8 @@ import java.util.Optional;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.BDDMockito.given;
-import static org.mockito.Mockito.never;
-import static org.mockito.Mockito.verify;
+import static org.mockito.BDDMockito.willDoNothing;
+import static org.mockito.Mockito.*;
 
 @ExtendWith(MockitoExtension.class) //This tells mockito that mockito annotations are been used to mock
 public class EmployeeServiceTests {
@@ -59,7 +59,6 @@ public class EmployeeServiceTests {
         System.out.println(savedEmployee);
         // then - verify the output
         assertThat(savedEmployee).isNotNull();
-
     }
 
     // JUnit test for saveEmployee method which throws exception
@@ -78,7 +77,6 @@ public class EmployeeServiceTests {
 
         // then - verify the output
         verify(employeeRepository, never()).save(any(Employee.class));
-
     }
 
     // JUnit test for getAllEmployees method
@@ -86,7 +84,6 @@ public class EmployeeServiceTests {
     @Test
     public void givenEmployeesList_whenGetAllEmployees_thenReturnEmployeesList() {
         // given - precondition or setup
-
         Employee employee1 = Employee.builder()
                 .id(1L)
                 .firstName("Favour")
@@ -102,7 +99,6 @@ public class EmployeeServiceTests {
         // then - verify the output
         assertThat(employeeList).isNotNull();
         assertThat(employeeList).size().isEqualTo(2);
-
     }
 
     // JUnit test for getAllEmployees method (negative scenario)
@@ -126,7 +122,6 @@ public class EmployeeServiceTests {
         // then - verify the output
         assertThat(employeeList).isEmpty();
         assertThat(employeeList).size().isEqualTo(0);
-
     }
 
     // JUnit test for getEmployeeById method
@@ -141,7 +136,6 @@ public class EmployeeServiceTests {
 
         // then - verify the output
         assertThat(savedEmployee).isNotNull();
-
     }
 
     // JUnit test for updateEmployee method
@@ -159,8 +153,21 @@ public class EmployeeServiceTests {
         // then - verify the output
         assertThat(updatedEmployee.getEmail()).isEqualTo("hunsu@gmail.com");
         assertThat(updatedEmployee.getFirstName().equals("Mos")).isTrue();
-
     }
 
+    // JUnit test for deleteEmployee method
+    @DisplayName("JUnit test for deleteEmployee method")
+    @Test
+    public void givenEmployeeId_whenDeleteEmployee_thenNothing() {
+        // given - precondition or setup
+        long employeeId = 1L;
+        willDoNothing().given(employeeRepository).deleteById(employeeId);
+
+        // when - action or the behaviour to be tested
+        employeeService.deleteEmployee(employeeId);
+
+        // then - verify the output
+        verify(employeeRepository, times(1)).deleteById(employeeId);
+    }
 
 }

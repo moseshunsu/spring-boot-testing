@@ -6,22 +6,35 @@ import net.higherAchievers.service.impl.EmployeeServiceImpl;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.mockito.BDDMockito;
-import org.mockito.Mockito;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.util.Optional;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.BDDMockito.given;
 
+@ExtendWith(MockitoExtension.class) //This tells mockito that mockito annotations are been used to mock
 public class EmployeeServiceTests {
 
+    @Mock
     private EmployeeRepository employeeRepository;
-    private EmployeeService employeeService;
+
+    @InjectMocks
+    private EmployeeServiceImpl employeeService;
+
+    private Employee employee;
 
     @BeforeEach
     public void setup() {
-        employeeRepository = Mockito.mock(EmployeeRepository.class);
-        employeeService = new EmployeeServiceImpl(employeeRepository);
+        employee = Employee.builder()
+                .id(1L)
+                .firstName("Moses")
+                .lastName("Hunsu")
+                .email("moses@gmail.com")
+                .build();
     }
 
     // JUnit test for saveEmployee method
@@ -29,14 +42,8 @@ public class EmployeeServiceTests {
     @Test
     public void givenEmployeeObject_whenSaveEmployee_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .id(1L)
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@gmail.com")
-                .build();
-        BDDMockito.given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
-        BDDMockito.given(employeeRepository.save(employee)).willReturn(employee);
+        given(employeeRepository.findByEmail(employee.getEmail())).willReturn(Optional.empty());
+        given(employeeRepository.save(employee)).willReturn(employee);
 
         System.out.println(employeeRepository);
         System.out.println(employeeService);

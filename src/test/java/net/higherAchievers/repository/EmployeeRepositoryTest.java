@@ -1,6 +1,7 @@
 package net.higherAchievers.repository;
 
 import net.higherAchievers.entity.Employee;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,18 +18,23 @@ public class EmployeeRepositoryTest {
     @Autowired
     private EmployeeRepository employeeRepository;
 
+    private Employee employee;
+
+    @BeforeEach
+    public void setup() {
+        employee = Employee.builder()
+                .firstName("Moses")
+                .lastName("Hunsu")
+                .email("moses@yahoo.com")
+                .build();
+    }
+
     // JUnit test for save employee operation
     @DisplayName("JUnit test for save employee operation")
     @Test
     public void givenEmployeeObject_whenSave_thenReturnSavedEmployee() {
 
         // given = precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses.hunsu@yahoo.com")
-                .build();
-
         // when - action or the behaviour that we are going test
         Employee savedEmployee = employeeRepository.save(employee);
 
@@ -39,19 +45,13 @@ public class EmployeeRepositoryTest {
     }
 
     // JUnit test for get all employees operation
-    @DisplayName("JUnit test for gat all employees operation")
+    @DisplayName("JUnit test for get all employees operation")
     @Test
     public void givenEmployeesList_whenFindAll_thenEmployeesList() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses.hunsu@yahoo.com")
-                .build();
-
         Employee employee1 = Employee.builder()
-                .firstName("John")
-                .lastName("Cena")
+                .firstName("Favour")
+                .lastName("Attah")
                 .email("cena@gmail.com")
                 .build();
 
@@ -72,11 +72,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenFindById_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses.hunsu@yahoo.com")
-                .build();
         employeeRepository.save(employee);
 
         // when - action or the behaviour to be tested
@@ -92,11 +87,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeEmail_whenFindByEmail_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
 
         // when - action or the behaviour to be tested
@@ -112,11 +102,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenUpdateEmployee_thenReturnUpdatedEmployee() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
 
         // when - action or the behaviour to be tested
@@ -136,11 +121,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenEmployeeObject_whenDelete_thenRemoveEmployee() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
 
         // when - action or the behaviour to be tested
@@ -159,11 +139,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstNameAndLastName_whenFindByJPQL_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
         String firstName = "Moses";
         String lastName = "Hunsu";
@@ -183,11 +158,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstNameAndLastName_whenFindByJPQLNamedParams_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
         String firstName = "Moses";
         String lastName = "Hunsu";
@@ -207,11 +177,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstName_whenFindByNativeSQL_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
         String firstName = "Moses";
         String lastName = "Hunsu";
@@ -229,11 +194,6 @@ public class EmployeeRepositoryTest {
     @Test
     public void givenFirstName_whenFindByNativeSQLNamedParams_thenReturnEmployeeObject() {
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@yahoo.com")
-                .build();
         employeeRepository.save(employee);
         String firstName = "Moses";
         String lastName = "Hunsu";
@@ -245,6 +205,5 @@ public class EmployeeRepositoryTest {
         assertThat(savedEmployee).isNotNull();
 
     }
-
 
 }

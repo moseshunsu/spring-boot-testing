@@ -3,6 +3,7 @@ package net.higherAchievers.controller;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import net.higherAchievers.entity.Employee;
 import net.higherAchievers.service.EmployeeService;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,18 +38,24 @@ public class EmployeeControllerTests {
     @Autowired
     private ObjectMapper objectMapper;
 
+    private Employee employee;
+
+    @BeforeEach
+    public void setup() {
+        employee = Employee.builder()
+                .firstName("Moses")
+                .lastName("Hunsu")
+                .email("moses@yahoo.com")
+                .build();
+    }
+
+
     // JUnit test for create employee REST API
     @DisplayName("JUnit test for create employee REST API")
     @Test
     public void givenEmployeeObject_whenCreateEmployee_thenReturnSavedEmployee() throws Exception {
 
         // given - precondition or setup
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@gmail.com")
-                .build();
-
         given(employeeService.saveEmployee(any(Employee.class)))
                 .willAnswer(invocation -> invocation.getArgument(0));
 
@@ -72,7 +79,7 @@ public class EmployeeControllerTests {
     public void givenListOfEmployees_whenGetAllEmployees_thenReturnEmployeesList() throws Exception {
         // given - precondition or setup
         List<Employee> listOfEmployees = new LinkedList<>();
-        listOfEmployees.add(Employee.builder().firstName("Moses").lastName("Hunsu").email("gmail.com").build());
+        listOfEmployees.add(employee);
         listOfEmployees.add(Employee.builder().firstName("Favour").lastName("Attah").email("favour.com").build());
         given(employeeService.getAllEmployees()).willReturn(listOfEmployees);
 
@@ -93,11 +100,6 @@ public class EmployeeControllerTests {
     public void givenEmployeeId_whenGetEmployeeId_thenReturnEmployeeObject() throws Exception {
         // given - precondition or setup
         long employeeId = 1L;
-        Employee employee = Employee.builder()
-                .firstName("Moses")
-                .lastName("Hunsu")
-                .email("moses@gmail.com")
-                .build();
         given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
 
         // when - action or the behaviour to be tested
@@ -112,5 +114,22 @@ public class EmployeeControllerTests {
 
     }
 
+    // negative scenario  - valid employee id
+    // JUnit test for GET employee by id REST API
+    @DisplayName("JUnit test for GET employee by id REST API - Negative Scenario")
+    @Test
+    public void givenInvalidEmployeeId_whenGetEmployeeId_thenReturnEmpty() throws Exception {
+        // given - precondition or setup
+        long employeeId = 1L;
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.empty());
+
+        // when - action or the behaviour to be tested
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        // then - verify the output
+        response.andExpect(status().isNotFound())
+                .andDo(print());
+
+    }
 
 }

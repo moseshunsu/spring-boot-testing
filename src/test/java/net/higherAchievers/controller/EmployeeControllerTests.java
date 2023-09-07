@@ -13,6 +13,7 @@ import org.springframework.test.web.servlet.ResultActions;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Optional;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -82,6 +83,32 @@ public class EmployeeControllerTests {
         response.andExpect(status().isOk())
                 .andDo(print())
                 .andExpect(jsonPath("$.size()", is(listOfEmployees.size())));
+
+    }
+
+    // positive scenario  - valid employee id
+    // JUnit test for GET employee by id REST API
+    @DisplayName("JUnit test for GET employee by id REST API - Positive Scenario")
+    @Test
+    public void givenEmployeeId_whenGetEmployeeId_thenReturnEmployeeObject() throws Exception {
+        // given - precondition or setup
+        long employeeId = 1L;
+        Employee employee = Employee.builder()
+                .firstName("Moses")
+                .lastName("Hunsu")
+                .email("moses@gmail.com")
+                .build();
+        given(employeeService.getEmployeeById(employeeId)).willReturn(Optional.of(employee));
+
+        // when - action or the behaviour to be tested
+        ResultActions response = mockMvc.perform(get("/api/employees/{id}", employeeId));
+
+        // then - verify the output
+        response.andExpect(status().isOk())
+                .andDo(print())
+                .andExpect(jsonPath("$.firstName", is(employee.getFirstName())))
+                .andExpect(jsonPath("$.lastName", is(employee.getLastName())))
+                .andExpect(jsonPath("$.email", is(employee.getEmail())));
 
     }
 
